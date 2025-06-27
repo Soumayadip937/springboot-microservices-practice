@@ -1,16 +1,15 @@
 package com.example.bookservice.controller;
-
 import com.example.bookservice.Model.Book;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.bookservice.service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Arrays;
+import java.util.Map;
 
 @RestController
+@RequestMapping("/books")
 public class BookController {
     /*@GetMapping("/books/first")
     public Book getFirstBook() {
@@ -33,23 +32,39 @@ public class BookController {
     }*//*
     }*/
         // In-memory storage
-        private final List<Book> books = new ArrayList<>();
+       /* private final List<Book> books = new ArrayList<>();
 
         // Constructor to preload some books
         public BookController() {
             books.add(new Book(1, "Clean Code", "Robert C. Martin"));
             books.add(new Book(2, "Spring in Action", "Craig Walls"));
             books.add(new Book(3, "Effective Java", "Joshua Bloch"));
-        }
-
-    @GetMapping("/book")
+        }*/
+    @Autowired
+    private BookService bookService;
+    @GetMapping
         public List<Book> getAllBooks() {
-            return books;
+            return bookService.getAllBooks();
         }
 
-    @PostMapping("/books/first")
+       /*@PostMapping
         public Book addBook(@RequestBody Book book) {
-            books.add(book); // Add to the in-memory list
-            return book;     // Echo back the added book
-        }
+            *//*books.add(book); // Add to the in-memory list
+            return book; *//*    // Echo back the added book
+           return bookService.addBook(book);
+        }*/
+       @PostMapping
+       public Map<String, Object> addBook(@RequestBody Book book) {
+           Book addedBook = bookService.addBook(book);
+           Map<String, Object> response = new HashMap<>();
+           response.put("message", "✅ Book added successfully!");
+           response.put("bookAdded", addedBook);
+           response.put("totalBooks", bookService.getAllBooks().size());
+           return response;
+       }
+
+    @GetMapping("/{id}")
+    public Book getBookById(@PathVariable int id) {
+        return bookService.getBookById(id);
+    }
     }
