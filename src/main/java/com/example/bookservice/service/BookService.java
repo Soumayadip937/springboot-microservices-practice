@@ -32,4 +32,18 @@ public class BookService {
                 .findFirst()
                 .orElse(null);
     }
+    public Book updateBook(int id, Book updatedBook) {
+        for (Book book : books) {
+            if (book.getId() == id) {
+                book.setTitle(updatedBook.getTitle());
+                book.setAuthor(updatedBook.getAuthor());
+                return book;
+            }
+        }
+        return null; // if not found
+    }
+    public boolean deleteBook(int id) {
+        return books.removeIf(book -> book.getId() == id);
+    }
+
 }

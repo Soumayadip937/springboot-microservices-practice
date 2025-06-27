@@ -67,4 +67,30 @@ public class BookController {
     public Book getBookById(@PathVariable int id) {
         return bookService.getBookById(id);
     }
+    @PutMapping("/{id}")
+    public Map<String, Object> updateBook(@PathVariable int id, @RequestBody Book updatedBook) {
+        Book book = bookService.updateBook(id, updatedBook);
+        Map<String, Object> response = new HashMap<>();
+        if (book != null) {
+            response.put("message", "✅ Book updated successfully!");
+            response.put("updatedBook", book);
+        } else {
+            response.put("message", "❌ Book not found with ID: " + id);
+        }
+        return response;
     }
+    @DeleteMapping("/{id}")
+    public Map<String, Object> deleteBook(@PathVariable int id) {
+        boolean isDeleted = bookService.deleteBook(id);
+        Map<String, Object> response = new HashMap<>();
+        if (isDeleted) {
+            response.put("message", "✅ Book deleted successfully!");
+            response.put("totalBooks", bookService.getAllBooks().size());
+        } else {
+            response.put("message", "❌ Book not found with ID: " + id);
+        }
+        return response;
+    }
+
+
+}
